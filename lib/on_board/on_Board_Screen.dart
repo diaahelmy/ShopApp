@@ -82,7 +82,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        navigateTo(context, LoginScreen());
+                        navigateAndFinsh(context, LoginScreen());
                       },
                       child: Text(
                         'Skip',
@@ -121,7 +121,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                     child: TextButton(
                       onPressed: () {
                         if(islist==true){
-                          navigateTo(context, LoginScreen());
+                          navigateAndFinsh(context, LoginScreen());
                         }
                         boardController.nextPage(
                           duration: Duration(milliseconds: 750),
