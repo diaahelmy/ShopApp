@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
+import 'package:shopapp/network/local/Cache.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class BoardingModel {
@@ -27,6 +28,13 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   var boardController = PageController();
   bool islist = false;
 
+  void submit(){
+    Cache.saveData(key: 'onBoarding', value: true).then((saved) {
+      if (saved) {
+        navigateAndFinsh(context, LoginScreen());
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +90,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        navigateTo(context, LoginScreen());
+                        submit();
                       },
                       child: Text(
                         'Skip',
@@ -101,19 +109,9 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                       count: boardingData.length,
                       effect: SlideEffect(
                         spacing: 30.0,
-                        dotColor: Colors.white,
-                        activeDotColor: Color(0xFF406be1),
+                        dotColor: Color(0xFF809ff6),
+                        activeDotColor: Colors.white,
                       ), // your preferred effect
-                      //          effect:  SlideEffect(
-                      //     spacing:  8.0,
-                      //    spacing:  8.0,
-                      //     dotWidth:  24.0,
-                      //     dotHeight:  16.0,
-                      //     paintStyle:  PaintingStyle.stroke,
-                      //     strokeWidth:  1.5,
-                      //     dotColor:  Colors.grey,
-                      //     activeDotColor:  Colors.indigo
-                      // ),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -121,7 +119,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                     child: TextButton(
                       onPressed: () {
                         if(islist==true){
-                          navigateTo(context, LoginScreen());
+                          submit();
                         }
                         boardController.nextPage(
                           duration: Duration(milliseconds: 750),
