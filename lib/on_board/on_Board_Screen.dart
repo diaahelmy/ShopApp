@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' ;
 import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
@@ -91,6 +91,8 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                     child: TextButton(
                       onPressed: () {
                         submit();
+
+
                       },
                       child: Text(
                         'Skip',
@@ -120,6 +122,8 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                       onPressed: () {
                         if(islist==true){
                           submit();
+
+
                         }
                         boardController.nextPage(
                           duration: Duration(milliseconds: 750),

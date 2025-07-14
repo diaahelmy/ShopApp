@@ -10,6 +10,7 @@ void navigateAndFinsh(context, widget) => Navigator.pushAndRemoveUntil(
   (Route<dynamic> route) => false,
 );
 
+
 Widget defaultFormField({
   Function(String)? onSubmit,
   Function(String)? onChange,
@@ -68,3 +69,4 @@ String? validateRequiredField(String? value, String label) {
   }
   return null;
 }
+
