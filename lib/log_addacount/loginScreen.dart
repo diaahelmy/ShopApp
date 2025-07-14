@@ -7,6 +7,8 @@ import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/cubit/cubit.dart';
 import 'package:shopapp/log_addacount/cubit/status.dart';
 import 'package:shopapp/log_addacount/registerScreen.dart';
+import 'package:shopapp/network/local/Cache.dart';
+import 'package:shopapp/screen/ShopHomeScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -153,27 +155,13 @@ class LoginScreen extends StatelessWidget {
         listener: (BuildContext context, state) {
           if(state is ShopLoginSuccessState){
             if(state.loginModel.status!){
-              Fluttertoast.showToast(
-                  msg: state.loginModel.message!,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
+              Cache.saveData(key: 'token', value: state.loginModel.data!.token!).then((onValue){
+                navigateAndFinsh(context, ShopHomescreen());
+              });
 
             }else{
 
-              Fluttertoast.showToast(
-                  msg: state.loginModel.message!,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
+             showToast(text: state.loginModel.message!, state: ToastStates.Error);
             }
 
           }

@@ -3,27 +3,40 @@ import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
 import 'package:shopapp/on_board/on_Board_Screen.dart';
+import 'package:shopapp/screen/ShopHomeScreen.dart';
 import 'package:shopapp/themes/ThemesLightandDark.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await Cache.init();
-  bool onBoarding = Cache.getData(key: 'onBoarding');
-  runApp( MyApp(onBoarding: onBoarding));
+  bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
+  String? token = Cache.getData(key: 'token') as String?;
+  Widget widget;
+  if(onBoarding != null){
+    if(token != null){
+      widget = ShopHomescreen();
+    }else{
+      widget = ShopHomescreen();
+    }
+
+  }else{
+    widget = OnBoardScreen();
+  }
+  runApp( MyApp(startWidget: widget));
 }
 
 class MyApp extends StatelessWidget {
-  final bool? onBoarding;
+  final Widget ? startWidget;
 
-   MyApp({ this.onBoarding});
+   MyApp({ this.startWidget});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: onBoarding! ? LoginScreen() :OnBoardScreen(),
+      home: startWidget,
 
       theme: lightTheme,
       darkTheme: darkTheme,

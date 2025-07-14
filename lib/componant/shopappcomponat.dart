@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void navigateTo(context, widget) =>
     Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
@@ -9,7 +10,6 @@ void navigateAndFinsh(context, widget) => Navigator.pushAndRemoveUntil(
   MaterialPageRoute(builder: (context) => widget),
   (Route<dynamic> route) => false,
 );
-
 
 Widget defaultFormField({
   Function(String)? onSubmit,
@@ -70,3 +70,31 @@ String? validateRequiredField(String? value, String label) {
   return null;
 }
 
+void showToast({required String text, required ToastStates state}) =>
+    Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 5,
+      backgroundColor: chooseToastColor(state),
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+
+enum ToastStates { Success, Error, Warning }
+
+Color chooseToastColor(ToastStates state) {
+  Color color;
+  switch (state) {
+    case ToastStates.Success:
+      color = Colors.green;
+      break;
+    case ToastStates.Error:
+      color = Colors.red;
+      break;
+    case ToastStates.Warning:
+      color = Colors.amber;
+      break;
+  }
+  return color;
+}
