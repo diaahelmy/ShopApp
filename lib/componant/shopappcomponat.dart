@@ -9,6 +9,7 @@ void navigateAndFinsh(context, widget) => Navigator.pushAndRemoveUntil(
   MaterialPageRoute(builder: (context) => widget),
   (Route<dynamic> route) => false,
 );
+
 Widget defaultFormField({
   Function(String)? onSubmit,
   Function(String)? onChange,
@@ -33,10 +34,7 @@ Widget defaultFormField({
   validator: validator,
   decoration: InputDecoration(
     suffixIcon: suffixIcon != null
-        ? IconButton(
-      icon: Icon(suffixIcon),
-      onPressed: onSuffixTap,
-    )
+        ? IconButton(icon: Icon(suffixIcon), onPressed: onSuffixTap)
         : null,
     labelText: lable,
     prefixIcon: Icon(prefix),
@@ -48,28 +46,21 @@ Widget defaultButton({
   required String label,
   required VoidCallback onPressed,
   Color? backgroundColor,
-}) =>
-    SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-
+}) => SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: backgroundColor,
+      padding: EdgeInsets.symmetric(vertical: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    child: Text(
+      label,
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+  ),
+);
 
 String? validateRequiredField(String? value, String label) {
   if (value == null || value.isEmpty) {
