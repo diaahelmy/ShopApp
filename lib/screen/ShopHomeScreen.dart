@@ -17,14 +17,27 @@ class ShopHomescreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-      body: defaultButton(
-        label: 'SignOut',
-        onPressed: () {
-          Cache.removeData(key: 'token').then((onValue) {
-            navigateAndFinsh(context, LoginScreen());
-          });
-        },
+      body:
+      Column(
+        children: [
+          // Image.network(product.image ?? placeholder),
+          Text('product.title', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text('product.description'),
+          Text('السعر: \$${'100'}'),
+          defaultButton(
+            label: 'SignOut',
+            onPressed: () {
+              Cache.removeData(key: 'token').then((onValue) {
+                navigateAndFinsh(context, LoginScreen());
+              });
+            },
+          ),
+
+        ],
       ),
+
+
+
     );
   }
 }

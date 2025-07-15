@@ -17,7 +17,7 @@ void main() async {
     if(token != null){
       widget = ShopHomescreen();
     }else{
-      widget = ShopHomescreen();
+      widget = LoginScreen();
     }
 
   }else{

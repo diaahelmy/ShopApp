@@ -6,7 +6,7 @@ class DioHelper {
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://student.valuxapps.com/api/',
+        baseUrl:'https://api.escuelajs.co/api/',
         receiveDataWhenStatusError: true,
         // connectTimeout: const Duration(seconds: 10),
         // receiveTimeout: const Duration(seconds: 10),
@@ -24,4 +24,5 @@ class DioHelper {
   }) async {
     return dio.post(url, queryParameters: query,data: data);
   }
+
 }

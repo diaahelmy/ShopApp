@@ -154,14 +154,17 @@ class LoginScreen extends StatelessWidget {
         },
         listener: (BuildContext context, state) {
           if(state is ShopLoginSuccessState){
-            if(state.loginModel.status!){
-              Cache.saveData(key: 'token', value: state.loginModel.data!.token!).then((onValue){
+            if(state.loginModel.access_token!.isNotEmpty){
+              Cache.saveData(key: 'token', value: state.loginModel.access_token!).then((onValue){
                 navigateAndFinsh(context, ShopHomescreen());
               });
 
             }else{
 
-             showToast(text: state.loginModel.message!, state: ToastStates.Error);
+              showToast(
+                text: state.loginModel.message ?? 'Login failed',
+                state: ToastStates.Error,
+              );
             }
 
           }
