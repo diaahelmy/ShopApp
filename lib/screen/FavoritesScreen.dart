@@ -1,17 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
-class ShopHomescreen extends StatelessWidget {
-  const ShopHomescreen({super.key});
+class FavoritesScreen extends StatelessWidget {
+  const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Home Screen Content',
+        'Favorites Screen Content',
         style: TextStyle(fontSize: 24),
       ),
-    );
-  }
+    );  }
 }

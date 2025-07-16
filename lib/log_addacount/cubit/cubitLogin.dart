@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show Cubit, BlocProvider;
 import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/cubit/status.dart';
+import 'package:shopapp/log_addacount/cubit/statusLogin.dart';
 import 'package:shopapp/model/ShopModelSignIn.dart';
 import 'package:shopapp/network/endPoint.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
@@ -41,4 +41,8 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
     });
 
   }
+
+
+
+
 }
