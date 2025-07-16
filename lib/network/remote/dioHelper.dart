@@ -6,7 +6,7 @@ class DioHelper {
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl:'https://api.escuelajs.co/api/',
+        baseUrl: 'https://api.escuelajs.co/api/',
         receiveDataWhenStatusError: true,
         // connectTimeout: const Duration(seconds: 10),
         // receiveTimeout: const Duration(seconds: 10),
@@ -15,14 +15,28 @@ class DioHelper {
     );
   }
 
-
-
-  static Future<Response> postData ({
+  static Future<Response> postData({
     required String url,
     Map<String, dynamic>? query,
     required Map<String, dynamic>? data,
   }) async {
-    return dio.post(url, queryParameters: query,data: data);
+    return dio.post(url, queryParameters: query, data: data);
   }
 
+  static Future<Response> getData({
+    required String url,
+    Map<String, dynamic>? query,
+    String? token,
+  }) async {
+    return await dio.get(
+      url,
+      queryParameters: query,
+      options: Options(
+        headers: {
+          'Authorization': token ?? '',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+  }
 }

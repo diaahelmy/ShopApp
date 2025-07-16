@@ -2,13 +2,12 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' ;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
 import 'package:shopapp/log_addacount/cubit/statusLogin.dart';
 import 'package:shopapp/log_addacount/registerScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
-import 'package:shopapp/screen/ShopHomeScreen.dart';
+import 'package:shopapp/screen/ShopMainScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -156,7 +155,7 @@ class LoginScreen extends StatelessWidget {
           if(state is ShopLoginSuccessState){
             if(state.loginModel.access_token!.isNotEmpty){
               Cache.saveData(key: 'token', value: state.loginModel.access_token!).then((onValue){
-                navigateAndFinsh(context, ShopHomescreen());
+                navigateAndFinsh(context, ShopmainScreen());
               });
 
             }else{

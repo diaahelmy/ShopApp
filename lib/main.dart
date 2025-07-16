@@ -28,7 +28,7 @@ void main() async {
   }
   runApp(
       BlocProvider(
-        create: (context) => CubitHomeScreen(),
+        create: (context) => CubitHomeScreen()..getProducts(),
         child: MyApp(startWidget: widget),
       ),
   );
