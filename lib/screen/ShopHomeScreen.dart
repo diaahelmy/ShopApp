@@ -5,6 +5,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
 import 'package:shopapp/log_addacount/cubit/cubitHomeScreen.dart';
 import 'package:shopapp/model/productmodel.dart';
@@ -18,6 +19,7 @@ class ShopHomescreen extends StatefulWidget {
 
 class _ShopHomescreenState extends State<ShopHomescreen> {
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -28,8 +30,10 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<CubitHomeScreen, StatesShopHome>(
       builder: (BuildContext context, StatesShopHome state) {
         var cubit = CubitHomeScreen.get(context);
@@ -44,6 +48,7 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
   }
 
   Widget productBuilder(CubitHomeScreen cubit) {
+
     final random = Random();
     final allProducts = cubit.products;
 
@@ -71,6 +76,8 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
   }
 
   Widget buildCarousel(List<String> imageUrls, CubitHomeScreen cubit) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       controller: _scrollController,
       child: Padding(
@@ -88,12 +95,17 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white, Colors.grey.shade100],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
+                        color: Colors.black12,
+                        blurRadius: 12,
+                        offset: Offset(0,6),
                       ),
                     ],
                   ),
@@ -129,7 +141,6 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
 
             SizedBox(height: 16),
 
-
             //  Grid View للمنتجات
             GridView.builder(
               physics: NeverScrollableScrollPhysics(),
@@ -139,62 +150,116 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.60,
               ),
               itemBuilder: (context, index) {
                 final product = cubit.products[index];
                 final image = (product.images.isNotEmpty)
                     ? product.images.first
                     : 'https://via.placeholder.com/400x300?text=No+Image';
-
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 4),
+                      )
+                    ],
                   ),
-                  elevation: 3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                        child: Image.network(
-                          image,
-                          height: 140,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.grey[300],
-                            height: 140,
-                            child: Icon(Icons.broken_image, color: Colors.grey),
+                      // ✅ صورة مربعة
+                      Expanded(
+                        flex: 6,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          child: Stack(
+                            children: [
+                              AspectRatio(
+                                aspectRatio: 1,
+                                child: Image.network(
+                                  image,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    color: Colors.grey[300],
+                                    child: Icon(Icons.broken_image, color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 6,
+                                right: 6,
+                                child: Material(
+                                  color: isDark
+                                      ? Colors.black.withOpacity(0.85)
+                                      : Colors.white,
+                                  shape: CircleBorder(),
+                                  elevation: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Icon(
+                                      Icons.favorite_border,
+                                      size: 18,
+                                      color: isDark ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          product.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          '\$${product.price}',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.secondary,
+                      SizedBox(height: 6),
+                      // ✅ تفاصيل تحت الصورة
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.3,
+                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                ),
+                              ),
+
+                              SizedBox(height: 6),
+
+                              Text(
+                                '\$${product.price}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                      SizedBox(height: 6),
                     ],
                   ),
                 );
+
+
+
               },
             ),
           ],
         ),
       ),
     );
-  }}
+  }
+}

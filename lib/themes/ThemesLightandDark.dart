@@ -1,54 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+final Color kNavyBlue = Color(0xFF004080); // أفتح من قبل
+final Color kAppBarLight = Color(0xFF0066AA); // أفتح أكتر
+final Color kGold = Color(0xFFF4C430);
 
 final lightTheme = ThemeData(
   brightness: Brightness.light,
-  scaffoldBackgroundColor: Colors.white,
-  primaryColor: Color(0xFF002855), // Navy Blue
+  primaryColor: kNavyBlue,
+  scaffoldBackgroundColor: Color(0xFFF7F7F7),
+
   colorScheme: ColorScheme.light(
-    primary: Color(0xFF002855), // Navy Blue
-    secondary: Color(0xFFF4C430), // Gold
+    primary: kNavyBlue,
     onPrimary: Colors.white,
+    secondary: kGold,
     onSecondary: Colors.black,
     background: Colors.white,
-    surface: Colors.white,
+    onBackground: Colors.black,
+    surface: Color(0xFFF8F9FA),
     onSurface: Colors.black,
   ),
-
-  // AppBar
   appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFF002855),
-    foregroundColor: Colors.white,
-    elevation: 2,
+    backgroundColor: Colors.white,
+    elevation: 1,
+    shadowColor: Colors.black12,
+    centerTitle: true,
     titleTextStyle: TextStyle(
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: FontWeight.bold,
-      color: Colors.white,
+      color: kNavyBlue,
+      letterSpacing: 0.5,
     ),
-    iconTheme: IconThemeData(color: Colors.white),
+    iconTheme: IconThemeData(color: kNavyBlue),
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ),
   ),
-
-  // BottomNavigationBar
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,
-    selectedItemColor: Color(0xFFF4C430), // Gold
-    unselectedItemColor: Colors.grey,
-    selectedIconTheme: IconThemeData(color: Color(0xFFF4C430)),
-    unselectedIconTheme: IconThemeData(color: Colors.grey),
-    showUnselectedLabels: true,
+    selectedItemColor: kGold,
+    unselectedItemColor: Colors.grey[600],
     selectedLabelStyle: TextStyle(
-      fontWeight: FontWeight.bold,
-      color: Color(0xFFF4C430),
+      fontWeight: FontWeight.w600,
+      fontSize: 12,
     ),
-    unselectedLabelStyle: TextStyle(color: Colors.grey),
+    unselectedLabelStyle: TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+    ),
     type: BottomNavigationBarType.fixed,
+    elevation: 8,
   ),
 
-  // Text
+  cardColor: Colors.white,
   textTheme: TextTheme(
     headlineLarge: TextStyle(
       fontSize: 32,
       fontWeight: FontWeight.bold,
-      color: Color(0xFF002855), // Navy
+      color: kNavyBlue,
     ),
     bodyMedium: TextStyle(
       fontSize: 16,
@@ -57,14 +67,12 @@ final lightTheme = ThemeData(
     labelLarge: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
-      color: Color(0xFFF4C430), // Gold accent
+      color: kGold,
     ),
   ),
-
-  // ElevatedButton
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Color(0xFFF4C430), // Gold
+      backgroundColor: kGold,
       foregroundColor: Colors.white,
       padding: EdgeInsets.symmetric(vertical: 16),
       shape: RoundedRectangleBorder(
@@ -74,39 +82,55 @@ final lightTheme = ThemeData(
   ),
 );
 
-
 final darkTheme = ThemeData(
-  primaryColor: Color(0xFF002855),
+  brightness: Brightness.dark,
+  primaryColor: kNavyBlue,
+  scaffoldBackgroundColor: Color(0xFF121212),
   colorScheme: ColorScheme.dark(
-    primary: Color(0xFF002855),
-    secondary: Color(0xFFF4C430),
+    primary: kNavyBlue,
     onPrimary: Colors.white,
+    secondary: kGold,
     onSecondary: Colors.black,
     background: Color(0xFF121212),
-    surface: Color(0xFF1F1F1F),
+    onBackground: Colors.white,
+    surface: Color(0xFF1E1E1E),
     onSurface: Colors.white,
   ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: Color(0xFF1F1F1F),
-    selectedItemColor: Color(0xFFF4C430), // الأصفر
-    unselectedItemColor: Colors.grey,
-    selectedIconTheme: IconThemeData(color: Color(0xFFF4C430)),
-    unselectedIconTheme: IconThemeData(color: Colors.grey),
-    showUnselectedLabels: true,
-    type: BottomNavigationBarType.fixed,
-  ),
-
   appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFF002855), // navy
-    foregroundColor: Colors.white,
+    backgroundColor: Color(0xFF1E1E1E),
+    elevation: 1,
+    shadowColor: Colors.black54,
+    centerTitle: true,
     titleTextStyle: TextStyle(
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: FontWeight.bold,
-      color: Colors.white,
+      color: kGold,
+      letterSpacing: 0.5,
     ),
-    iconTheme: IconThemeData(color: Colors.white),
+    iconTheme: IconThemeData(color: kGold),
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF121212),
+      statusBarIconBrightness: Brightness.light,
+    ),
   ),
 
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: Color(0xFF1E1E1E),
+    selectedItemColor: kGold,
+    unselectedItemColor: Colors.grey[500],
+    selectedLabelStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12,
+    ),
+    unselectedLabelStyle: TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+    ),
+    type: BottomNavigationBarType.fixed,
+    elevation: 8,
+  ),
+
+  cardColor: Color(0xFF1E1E1E),
   textTheme: TextTheme(
     headlineLarge: TextStyle(
       fontSize: 32,
@@ -115,17 +139,17 @@ final darkTheme = ThemeData(
     ),
     bodyMedium: TextStyle(
       fontSize: 16,
-      color: Colors.white70,
+      color: Colors.white,
     ),
     labelLarge: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
-      color: Colors.black,
+      color: kGold,
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Color(0xFFF4C430),
+      backgroundColor: kGold,
       foregroundColor: Colors.black,
       padding: EdgeInsets.symmetric(vertical: 16),
       shape: RoundedRectangleBorder(
