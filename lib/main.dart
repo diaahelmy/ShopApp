@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/log_addacount/cubit/cubitHomeScreen.dart';
+import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
@@ -27,10 +27,17 @@ void main() async {
     widget = OnBoardScreen();
   }
   runApp(
-      BlocProvider(
-        create: (context) => CubitHomeScreen()..getProducts(),
-        child: MyApp(startWidget: widget),
-      ),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<CubitHomeScreen>(
+          create: (context) => CubitHomeScreen()
+            ..getProducts()
+            ..getCategories(),
+        ),
+        // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
+      ],
+      child: MyApp(startWidget: widget),
+    ),
   );
 }
 

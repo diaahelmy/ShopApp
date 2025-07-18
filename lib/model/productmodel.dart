@@ -4,7 +4,7 @@ class ProductModel {
   final String slug;
   final double price;
   final String description;
-  final Category category;
+  final CategoryModel  category;
   final List<String> images;
   final DateTime creationAt;
   final DateTime updatedAt;
@@ -28,7 +28,7 @@ class ProductModel {
       slug: json['slug'],
       price: json['price'].toDouble(),
       description: json['description'],
-      category: Category.fromJson(json['category']),
+      category: CategoryModel .fromJson(json['category']),
       images: List<String>.from(json['images']),
       creationAt: DateTime.parse(json['creationAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -49,7 +49,7 @@ class ProductModel {
     };
   }
 }
-class Category {
+class CategoryModel  {
   final int id;
   final String name;
   final String slug;
@@ -57,7 +57,7 @@ class Category {
   final DateTime creationAt;
   final DateTime updatedAt;
 
-  Category({
+  CategoryModel ({
     required this.id,
     required this.name,
     required this.slug,
@@ -66,8 +66,8 @@ class Category {
     required this.updatedAt,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
+  factory CategoryModel .fromJson(Map<String, dynamic> json) {
+    return CategoryModel (
       id: json['id'],
       name: json['name'],
       slug: json['slug'],

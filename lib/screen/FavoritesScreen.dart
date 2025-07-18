@@ -11,5 +11,6 @@ class FavoritesScreen extends StatelessWidget {
         'Favorites Screen Content',
         style: TextStyle(fontSize: 24),
       ),
-    );  }
+    );
+  }
 }
