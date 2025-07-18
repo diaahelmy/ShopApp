@@ -42,7 +42,52 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
 
   }
 
+  void userRegister({
+    required String name,
+    required String email,
+    required String password,
+    required String avatar
 
+  }) {
+    emit(ShopRegisterLoadingState());
+
+    DioHelper.postData(
+      url: REGISTER, // الرابط أو المسار الخاص بالتسجيل
+      data: {
+        'avatar':avatar,
+        "name": name,
+        "email": email,
+        "password": password,
+
+      },
+    ).then((value) {
+      loginModel = ShopLoginModel.fromJson(value.data);
+      print(loginModel?.access_token);
+
+      emit(ShopRegisterSuccessState(loginModel!));
+    }).catchError((error) {
+      if (error is DioException) {
+        if (error.response?.statusCode == 400) {
+          final errorData = error.response?.data['message'];
+
+          String errorMessage;
+          if (errorData is List) {
+
+            errorMessage = errorData.join('\n');
+          } else {
+            errorMessage = errorData?.toString() ?? 'Registration failed.';
+          }
+
+          showToast(text: errorMessage, state: ToastStates.Error);
+        } else {
+          showToast(text: 'Registration failed. Please try again.', state: ToastStates.Error);
+        }
+      } else {
+        showToast(text: 'An unexpected error occurred.', state: ToastStates.Error);
+      }
+      emit(ShopRegisterErrorState(error.toString()));
+    });
+  }
 
 
 }

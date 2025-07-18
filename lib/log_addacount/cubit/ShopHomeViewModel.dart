@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
 import 'package:shopapp/model/productmodel.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
-import 'package:shopapp/screen/FavoritesScreen.dart';
-import 'package:shopapp/screen/SettingScreen.dart';
-import 'package:shopapp/screen/ShopHomeScreen.dart';
-import 'package:shopapp/screen/categoriesScreen.dart';
 import 'package:shopapp/network/endPoint.dart';
+import 'package:shopapp/screen/navBarMenu/FavoritesScreen.dart';
+import 'package:shopapp/screen/navBarMenu/SettingScreen.dart';
+import 'package:shopapp/screen/navBarMenu/ShopHomeScreen.dart';
+import 'package:shopapp/screen/navBarMenu/categoriesScreen.dart';
 
 class CubitHomeScreen extends Cubit<StatesShopHome> {
   CubitHomeScreen() : super(ShopInitialHomeStates());
@@ -45,11 +45,11 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
   List<CategoryModel> categories = [];
 
   List<ProductModel> products = [];
-  int productsPerPage = 20;
+  int productsPerPage = 10;
 
   void loadMoreProducts() {
-    if (productsPerPage + 20 <= products.length) {
-      productsPerPage += 20;
+    if (productsPerPage + 10 <= products.length) {
+      productsPerPage += 10;
     } else {
       productsPerPage = products.length;
     }

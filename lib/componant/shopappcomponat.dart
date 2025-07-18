@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/model/productmodel.dart';
-import 'package:shopapp/screen/ProdectsItem.dart';
 import 'package:shopapp/screen/ProductDetailsScreen.dart';
-import 'package:shopapp/screen/ShopHomeScreen.dart';
+import 'package:shopapp/screen/navBarMenu/ShopHomeScreen.dart';
 
 void navigateTo(context, widget) =>
     Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
