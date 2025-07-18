@@ -108,6 +108,7 @@ Widget productBuilder({
   required ScrollController scrollController,
   bool showCategories = true,
   List<CategoryModel> categories = const [],
+   required BuildContext context ,
 }) => SafeArea(
   child: SingleChildScrollView(
     controller: scrollController,
@@ -116,7 +117,7 @@ Widget productBuilder({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (showCategories) buildCategoryList(categories),
+          if (showCategories) buildCategoryList(categories,context),
           SizedBox(height: 4),
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8),
@@ -244,4 +245,48 @@ Color chooseToastColor(ToastStates state) {
       break;
   }
   return color;
+}
+
+Widget buildHorizontalCategoryList({
+  required BuildContext context,
+  required List<CategoryModel> categories,
+}) {
+  return ListView.separated(
+    scrollDirection: Axis.horizontal,
+    itemCount: categories.length,
+    separatorBuilder: (_, __) => const SizedBox(width: 12),
+    itemBuilder: (context, index) {
+      final category = categories[index];
+      return GestureDetector(
+        onTap: () {
+          navigateTo(context, ProdectsItem(category: category));
+        },
+        child: Column(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(category.image, fit: BoxFit.cover),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(category.name, style: GoogleFonts.poppins(fontSize: 12)),
+          ],
+        ),
+      );
+    },
+  );
 }

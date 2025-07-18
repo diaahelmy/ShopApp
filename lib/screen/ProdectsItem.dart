@@ -31,6 +31,7 @@ class ProdectsItem extends StatelessWidget {
                   scrollController: _scrollController,
                   products: clothesProducts,
                   showCategories: false,
+            context: context
                 )
               : const Center(child: CircularProgressIndicator());
         },
