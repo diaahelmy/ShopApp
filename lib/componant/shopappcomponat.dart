@@ -47,8 +47,9 @@ Widget buildProductCard({
                   product.images.first,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.broken_image, color: Colors.grey),
+                    color: Theme.of(context).colorScheme.surface,
+                    child:  Icon(Icons.broken_image,
+                        color: Theme.of(context).colorScheme.surface,),
                   ),
                 ),
               ),
@@ -57,7 +58,7 @@ Widget buildProductCard({
               top: 10,
               right: 10,
               child: Material(
-                color: Colors.white,
+color: Theme.of(context).colorScheme.surface,
                 shape: const CircleBorder(),
                 elevation: 3,
                 child: Padding(
@@ -65,7 +66,7 @@ Widget buildProductCard({
                   child: Icon(
                     Icons.favorite_border,
                     size: 18,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
