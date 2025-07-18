@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/model/productmodel.dart';
+import 'package:shopapp/screen/ProdectsItem.dart';
+import 'package:shopapp/screen/ProductDetailsScreen.dart';
 import 'package:shopapp/screen/ShopHomeScreen.dart';
 
 void navigateTo(context, widget) =>
@@ -14,26 +16,33 @@ void navigateAndFinsh(context, widget) => Navigator.pushAndRemoveUntil(
   MaterialPageRoute(builder: (context) => widget),
   (Route<dynamic> route) => false,
 );
-Widget buildProductCard({required ProductModel product , required BuildContext  context} )  =>
-   Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withAlpha((0.1 * 255).round()),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
+
+Widget buildProductCard({
+  required ProductModel product,
+  required BuildContext context,
+}) => Container(
+  decoration: BoxDecoration(
+    color: Theme.of(context).cardColor,
+    borderRadius: BorderRadius.circular(16),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withAlpha((0.1 * 255).round()),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  ),
+
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      GestureDetector(
+        child: Stack(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Image.network(
@@ -55,77 +64,99 @@ Widget buildProductCard({required ProductModel product , required BuildContext  
                 elevation: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(6),
-                  child: Icon(Icons.favorite_border, size: 18, color: Colors.black),
+                  child: Icon(
+                    Icons.favorite_border,
+                    size: 18,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                product.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
-                ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              product.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
               ),
+            ),
 
-              const SizedBox(height: 6),
-              Text(
-                '${product.price} EGP',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey,
+            const SizedBox(height: 6),
+            Text(
+              '${product.price}',
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+);
 
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
 Widget productBuilder({
   required List<ProductModel> products,
   required ScrollController scrollController,
   bool showCategories = true,
   List<CategoryModel> categories = const [],
-}) =>
-    SafeArea(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (showCategories) buildCategoryList(categories),
-              GridView.builder(
-                shrinkWrap: true,
-                itemCount: products.length,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  childAspectRatio: 0.58,
-                ),
-                itemBuilder: (context, index) =>
-                    buildProductCard(product: products[index], context: context),
+}) => SafeArea(
+  child: SingleChildScrollView(
+    controller: scrollController,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (showCategories) buildCategoryList(categories),
+          SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              'Recommended ',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
-            ],
+            ),
           ),
-        ),
+          SizedBox(height: 6),
+          GridView.builder(
+            shrinkWrap: true,
+            itemCount: products.length,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 14,
+              mainAxisSpacing: 14,
+              childAspectRatio: 0.58,
+            ),
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () {
+                navigateTo(
+                  context,
+                  Productdetailsscreen(product: products[index]),
+                );
+              },
+              child: buildProductCard(
+                product: products[index],
+                context: context,
+              ),
+            ),
+          ),
+        ],
       ),
-    );
-
+    ),
+  ),
+);
 
 Widget defaultFormField({
   Function(String)? onSubmit,
