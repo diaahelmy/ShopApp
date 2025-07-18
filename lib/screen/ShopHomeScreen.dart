@@ -37,7 +37,7 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
         var cubit = CubitHomeScreen.get(context);
         return cubit.products.isNotEmpty
             ? productBuilder(
-          context: context,
+                context: context,
                 scrollController: _scrollController,
                 products: cubit.products,
                 showCategories: true,
@@ -50,7 +50,10 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
   }
 }
 
-Widget buildCategoryList(List<CategoryModel> categories,BuildContext context) {
+Widget buildCategoryListHome(
+  List<CategoryModel> categories,
+  BuildContext context,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -63,8 +66,44 @@ Widget buildCategoryList(List<CategoryModel> categories,BuildContext context) {
       ),
       SizedBox(
         height: 90,
-        child: buildHorizontalCategoryList(
-          categories: categories, context: context,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            return GestureDetector(
+              onTap: () {
+                navigateTo(context, ProdectsItem(category: category));
+              },
+              child: Column(
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+
+                      child: Image.network(category.image, fit: BoxFit.cover),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(category.name, style: GoogleFonts.poppins(fontSize: 12)),
+                ],
+              ),
+            );
+          },
         ),
       ),
       const SizedBox(height: 16),

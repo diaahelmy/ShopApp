@@ -13,29 +13,26 @@ class ProdectsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollController();
-    final clothesProducts = CubitHomeScreen.get(context).products
+    final clothesProducts = CubitHomeScreen.get(context)
+        .products
         .where(
           (product) =>
-              product.category.name.toLowerCase() ==
-              category.name.toLowerCase(),
-        )
+      product.category.name.toLowerCase() ==
+          category.name.toLowerCase(),
+    )
         .toList();
 
     return Scaffold(
       appBar: AppBar(title: Text(category.name)),
-      body: ListView.builder(
-        itemCount: clothesProducts.length,
-        itemBuilder: (context, index) {
-          return clothesProducts.isNotEmpty
-              ? productBuilder(
-                  scrollController: _scrollController,
-                  products: clothesProducts,
-                  showCategories: false,
-            context: context
-                )
-              : const Center(child: CircularProgressIndicator());
-        },
-      ),
+      body: clothesProducts.isNotEmpty
+          ? productBuilder(
+        scrollController: _scrollController,
+        products: clothesProducts,
+        showCategories: false,
+        showRecommendedTitle: false,
+        context: context,
+      )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

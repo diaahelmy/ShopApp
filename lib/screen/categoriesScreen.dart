@@ -15,10 +15,47 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = CubitHomeScreen.get(context).categories;
 
-     return Scaffold(
-       body:   buildHorizontalCategoryList(
-       categories: categories, context: context,
-     ),
-     );
+    return Scaffold(
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return GestureDetector(
+            onTap: () {
+              navigateTo(context, ProdectsItem(category: category,));
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[200],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: NetworkImage(category.image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    category.name,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
-  }
+}

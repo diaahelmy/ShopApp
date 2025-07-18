@@ -107,8 +107,9 @@ Widget productBuilder({
   required List<ProductModel> products,
   required ScrollController scrollController,
   bool showCategories = true,
+  bool showRecommendedTitle = true,
   List<CategoryModel> categories = const [],
-   required BuildContext context ,
+  required BuildContext context,
 }) => SafeArea(
   child: SingleChildScrollView(
     controller: scrollController,
@@ -117,9 +118,9 @@ Widget productBuilder({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (showCategories) buildCategoryList(categories,context),
+          if (showCategories) buildCategoryListHome(categories, context),
           SizedBox(height: 4),
-          Padding(
+          if (showRecommendedTitle)    Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8),
             child: Text(
               'Recommended ',
@@ -129,7 +130,6 @@ Widget productBuilder({
               ),
             ),
           ),
-          SizedBox(height: 6),
           GridView.builder(
             shrinkWrap: true,
             itemCount: products.length,
@@ -247,46 +247,92 @@ Color chooseToastColor(ToastStates state) {
   return color;
 }
 
-Widget buildHorizontalCategoryList({
-  required BuildContext context,
-  required List<CategoryModel> categories,
-}) {
-  return ListView.separated(
-    scrollDirection: Axis.horizontal,
-    itemCount: categories.length,
-    separatorBuilder: (_, __) => const SizedBox(width: 12),
-    itemBuilder: (context, index) {
-      final category = categories[index];
-      return GestureDetector(
-        onTap: () {
-          navigateTo(context, ProdectsItem(category: category));
-        },
-        child: Column(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(category.image, fit: BoxFit.cover),
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(category.name, style: GoogleFonts.poppins(fontSize: 12)),
-          ],
-        ),
-      );
-    },
-  );
-}
+// Widget buildCategoryList({
+//   required BuildContext context,
+//   required List<CategoryModel> categories,
+//   Axis direction = Axis.horizontal,
+//   double itemWidth = 60,
+//   double itemHeight = 60,
+//   double spacing = 12,
+//   String layoutType = "grid", // grid / horizontal / row
+// }) {
+//   return ListView.separated(
+//     scrollDirection: direction,
+//     itemCount: categories.length,
+//     separatorBuilder: (_, __) => SizedBox(
+//       width: direction == Axis.horizontal ? spacing : 0,
+//       height: direction == Axis.vertical ? spacing : 0,
+//     ),
+//     itemBuilder: (context, index) {
+//       final category = categories[index];
+//
+//       if (layoutType == "row") {
+//         /// شكل Row زي اللي تحت
+//         return GestureDetector(
+//           onTap: () => navigateTo(context, ProdectsItem(category: category)),
+//           child: Container(
+//             margin: const EdgeInsets.symmetric(vertical: 8),
+//             padding: const EdgeInsets.all(12),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(16),
+//               color: Colors.grey[200],
+//             ),
+//             child: Row(
+//               children: [
+//                 Container(
+//                   width: itemWidth,
+//                   height: itemHeight,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(12),
+//                     image: DecorationImage(
+//                       image: NetworkImage(category.image),
+//                       fit: BoxFit.cover,
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(width: 16),
+//                 Text(
+//                   category.name,
+//                   style: const TextStyle(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.w500,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         );
+//       }
+//
+//       /// الشكل العادي Grid أو Horizontal
+//       return GestureDetector(
+//         onTap: () => navigateTo(context, ProdectsItem(category: category)),
+//         child: Column(
+//           children: [
+//             Container(
+//               width: itemWidth,
+//               height: itemHeight,
+//               decoration: BoxDecoration(
+//                 color: Theme.of(context).cardColor,
+//                 borderRadius: BorderRadius.circular(16),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.black12,
+//                     blurRadius: 4,
+//                     offset: const Offset(0, 2),
+//                   ),
+//                 ],
+//               ),
+//               child: ClipRRect(
+//                 borderRadius: BorderRadius.circular(16),
+//                 child: Image.network(category.image, fit: BoxFit.cover),
+//               ),
+//             ),
+//             const SizedBox(height: 6),
+//             Text(category.name, style: GoogleFonts.poppins(fontSize: 12)),
+//           ],
+//         ),
+//       );
+//     },
+//   );
+// }
