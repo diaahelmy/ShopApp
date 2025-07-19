@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteState.dart';
 import 'package:shopapp/model/productmodel.dart';
 import 'package:shopapp/screen/ProductDetailsScreen.dart';
 import 'package:shopapp/screen/navBarMenu/ShopHomeScreen.dart';
@@ -48,8 +51,10 @@ Widget buildProductCard({
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Theme.of(context).colorScheme.surface,
-                    child:  Icon(Icons.broken_image,
-                        color: Theme.of(context).colorScheme.surface,),
+                    child: Icon(
+                      Icons.broken_image,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                 ),
               ),
@@ -57,20 +62,31 @@ Widget buildProductCard({
             Positioned(
               top: 10,
               right: 10,
-              child: Material(
-color: Theme.of(context).colorScheme.surface,
-                shape: const CircleBorder(),
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 18,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
+              child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                builder: (context, favState) {
+                  final isFav = FavoriteCubit.get(context).isFavorite(product.id);
+                  return GestureDetector(
+                    onTap: () {
+                      FavoriteCubit.get(context).toggleFavorite(product.id);
+                    },
+                    child: Material(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: const CircleBorder(),
+                      elevation: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          size: 18,
+                          color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
+
           ],
         ),
       ),
@@ -119,16 +135,17 @@ Widget productBuilder({
         children: [
           if (showCategories) buildCategoryListHome(categories, context),
           SizedBox(height: 4),
-          if (showRecommendedTitle)    Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 8),
-            child: Text(
-              'Recommended ',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+          if (showRecommendedTitle)
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 8),
+              child: Text(
+                'Recommended ',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
           GridView.builder(
             shrinkWrap: true,
             itemCount: products.length,

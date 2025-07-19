@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
@@ -13,6 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await Cache.init();
+
+  final favoriteCubit = FavoriteCubit();
+  await favoriteCubit.loadFavorites();
+
   bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
   String? token = Cache.getData(key: 'token') as String?;
   Widget widget;
@@ -36,6 +41,9 @@ void main() async {
         ),
         BlocProvider<ShopLoginCubit>(
           create: (context) => ShopLoginCubit(),
+        ),
+        BlocProvider<FavoriteCubit>.value(
+          value: favoriteCubit,
         ),
         // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
       ],
