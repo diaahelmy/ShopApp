@@ -1,16 +1,18 @@
-# shopapp
+# 🛍️ ShopApp
 
-A new Flutter project.
+A complete e-commerce Flutter application with user authentication, product browsing, favorites, and profile management.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+- 🔐 **User Authentication (Login / Register)**
+- 🔍 **Browse and search for products**
+- ❤️ **Add/remove products from favorites**
+- 👤 **Manage user profile**
+- 🔔 **Toast and loading indicators for smooth UX**
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Getting Started
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This project is built using Flutter.  
+To run the app locally:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[📥 Download Latest APK](https://github.com/diaahelmy/ShopApp/releases/download/v1.0.0/app-release.apk)
