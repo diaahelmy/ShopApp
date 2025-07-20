@@ -2,15 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show Cubit, BlocProvider;
 import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/cubit/statusLogin.dart';
+import 'package:shopapp/model/RegisterModel.dart';
 import 'package:shopapp/model/ShopModelSignIn.dart';
 import 'package:shopapp/network/endPoint.dart';
+import 'package:shopapp/network/local/Cache.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
 
 class ShopLoginCubit extends Cubit<ShopLoginStates> {
   ShopLoginCubit() : super(ShopLoginInitialState());
 
-  ShopLoginModel? loginModel ;
-
+  UserModel? loginModel ;
+  ShopLoginModel? loginModel2 ;
   static ShopLoginCubit get(context) => BlocProvider.of(context);
 
 
@@ -20,10 +22,10 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
       url: LOGIN,
       data: {'email': email, 'password': password},
     ).then((onValue) {
-      loginModel =ShopLoginModel.fromJson(onValue.data);
-      print(loginModel?.access_token);
+      loginModel2 =ShopLoginModel.fromJson(onValue.data);
 
-      emit(ShopLoginSuccessState(loginModel!));
+      print(loginModel2?.access_token);
+      emit(ShopLoginSuccessState(loginModel2!));
 
     }).catchError((error){
       if (error is DioException) {
@@ -61,9 +63,11 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
 
       },
     ).then((value) {
-      loginModel = ShopLoginModel.fromJson(value.data);
+      loginModel = UserModel.fromJson(value.data);
       print(loginModel?.access_token);
-
+      Cache.saveData(key: 'userId', value: loginModel!.id);
+      Cache.saveData(key: 'name', value: loginModel!.name);
+      Cache.saveData(key: 'email', value: loginModel!.email);
       emit(ShopRegisterSuccessState(loginModel!));
     }).catchError((error) {
       if (error is DioException) {

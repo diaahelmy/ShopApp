@@ -7,8 +7,14 @@ class UserModel {
   final String? avatar;
   final DateTime? creationAt;
   final DateTime? updatedAt;
+  final String? message;
+  final String? access_token;
+  final  String? refresh_token;
 
   UserModel({
+    this.message,
+    this.access_token,
+    this.refresh_token,
     this.id,
     required this.name,
     required this.email,
@@ -25,6 +31,9 @@ class UserModel {
       name: json['name'],
       email: json['email'],
       password: json['password'],
+      message: json['message'],
+      access_token: json['access_token'],
+      refresh_token: json['refresh_token'],
       role: json['role'],
       avatar: json['avatar'],
       creationAt: json['creationAt'] != null
@@ -38,6 +47,9 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'access_token':access_token,
+      'refresh_token':refresh_token,
+      'message':message,
       'id': id,
       'name': name,
       'email': email,

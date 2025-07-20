@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
+import 'package:shopapp/log_addacount/cubit/settings/SettingsCubit.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
@@ -17,10 +18,10 @@ void main() async {
 
   final favoriteCubit = FavoriteCubit();
   await favoriteCubit.loadFavorites();
-
   bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
   String? token = Cache.getData(key: 'token') as String?;
   Widget widget;
+
   if(onBoarding != null){
     if(token != null){
       widget = ShopmainScreen();
@@ -44,6 +45,9 @@ void main() async {
         ),
         BlocProvider<FavoriteCubit>.value(
           value: favoriteCubit,
+        ),
+        BlocProvider<SettingsCubit>(
+          create: (context) => SettingsCubit()..loadUserFromCache(),
         ),
         // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
       ],

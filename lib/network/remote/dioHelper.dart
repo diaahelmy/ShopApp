@@ -39,4 +39,23 @@ class DioHelper {
       ),
     );
   }
+
+  static Future<Response> putData({
+    required String url,
+    Map<String, dynamic>? query,
+    required Map<String, dynamic> data,
+    required String token,
+  }) async {
+    return dio.put(
+      url,
+      queryParameters: query,
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+  }
 }

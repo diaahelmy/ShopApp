@@ -26,8 +26,14 @@
         builder: (context, state) {
           var cubit = CubitHomeScreen.get(context);
 
-          return cubit.products.isNotEmpty
-              ? NotificationListener<ScrollNotification>(
+          return
+            RefreshIndicator(
+              onRefresh: () async {
+            await cubit.products;
+          },
+          child:  cubit.products.isEmpty
+              ? const Center(child: Text("No data now"))
+              : NotificationListener<ScrollNotification>(
             onNotification: (scrollNotification) {
               if (scrollNotification.metrics.pixels >=
                   scrollNotification.metrics.maxScrollExtent - 200) {
@@ -42,8 +48,7 @@
               showCategories: true,
               categories: cubit.categories,
             ),
-          )
-              : const Center(child: CircularProgressIndicator());
+          ));
         },
       );
     }

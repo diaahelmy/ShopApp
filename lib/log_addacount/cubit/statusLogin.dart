@@ -1,3 +1,4 @@
+import 'package:shopapp/model/RegisterModel.dart';
 import 'package:shopapp/model/ShopModelSignIn.dart';
 
 abstract class ShopLoginStates {}
@@ -21,7 +22,7 @@ class ShopLoginErrorState extends ShopLoginStates {
 class ShopRegisterLoadingState extends ShopLoginStates {}
 
 class ShopRegisterSuccessState extends ShopLoginStates {
-  final ShopLoginModel loginModel;
+  final UserModel loginModel;
 
   ShopRegisterSuccessState(this.loginModel);
 }
