@@ -17,7 +17,6 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
 
   int currentIndex = 0;
 
-
   List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
     BottomNavigationBarItem(
@@ -48,6 +47,7 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
     SettingScreen(),
   ];
 
+
   void loadMoreProducts() {
     if (productsPerPage + 10 <= products.length) {
       productsPerPage += 10;
@@ -57,43 +57,50 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
     emit(ProductSuccessState());
   }
 
-  void getProducts() {
-    emit(ProductLoadingState());
+  void getProducts({bool forceRefresh = false}) {
+    if (products.isEmpty || forceRefresh) {
+      emit(ProductLoadingState());
 
-    DioHelper.getData(url: PRODUCTS)
-        .then((value) {
-          print('API Response: ${value.data}');
+      DioHelper.getData(url: PRODUCTS)
+          .then((value) {
+            print('API Response: ${value.data}');
 
-          products = (value.data as List)
-              .map((e) => ProductModel.fromJson(e))
-              .toList();
+            products = (value.data as List)
+                .map((e) => ProductModel.fromJson(e))
+                .toList();
 
-          productsPerPage = products.length >= 20 ? 20 : products.length;
+            productsPerPage = products.length >= 20 ? 20 : products.length;
 
-          emit(ProductSuccessState());
-        })
-        .catchError((error) {
-          print('Error: $error');
-          emit(ProductErrorState(error.toString()));
-        });
+            emit(ProductSuccessState());
+          })
+          .catchError((error) {
+            print('Error: $error');
+            emit(ProductErrorState(error.toString()));
+          });
+    } else {
+
+    }
   }
 
-  void getCategories() {
-    emit(CategoriesLoadingState());
+  void getCategories({bool forceRefresh = false}) {
+    if(categories.isEmpty|| forceRefresh) {
+      emit(CategoriesLoadingState());
 
-    DioHelper.getData(url: CATEGORIES)
-        .then((value) {
-          print('Categories API Response: ${value.data}');
+      DioHelper.getData(url: CATEGORIES)
+          .then((value) {
+        print('Categories API Response: ${value.data}');
 
-          categories = (value.data as List)
-              .map((e) => CategoryModel.fromJson(e))
-              .toList();
+        categories = (value.data as List)
+            .map((e) => CategoryModel.fromJson(e))
+            .toList();
 
-          emit(CategoriesSuccessState());
-        })
-        .catchError((error) {
-          print('Categories Error: $error');
-          emit(CategoriesErrorState(error.toString()));
-        });
+        emit(CategoriesSuccessState());
+      })
+          .catchError((error) {
+        print('Categories Error: $error');
+        emit(CategoriesErrorState(error.toString()));
+      });
+    }else{
+    }
   }
 }

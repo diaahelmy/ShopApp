@@ -21,7 +21,10 @@ class ShopmainScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
-          body: cubit.bottomScreen[cubit.currentIndex],
+          body: IndexedStack(
+            index: cubit.currentIndex,
+            children: cubit.bottomScreen,
+          ),
           bottomNavigationBar: BottomNavigationBar(
             items: cubit.bottomItems,
             currentIndex: cubit.currentIndex,

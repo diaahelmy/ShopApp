@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopapp/core/theme/app_colors.dart';
 import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
 import 'package:shopapp/log_addacount/cubit/settings/SettingsCubit.dart';
+import 'package:shopapp/log_addacount/cubit/themes/ThemeCubit.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
 import 'package:shopapp/network/remote/dioHelper.dart';
 import 'package:shopapp/on_board/on_Board_Screen.dart';
 import 'package:shopapp/screen/ShopMainScreen.dart';
-import 'package:shopapp/themes/ThemesLightandDark.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +50,9 @@ void main() async {
         BlocProvider<SettingsCubit>(
           create: (context) => SettingsCubit()..loadUserFromCache(),
         ),
+        BlocProvider(
+          create: (_) => ThemeCubit(),
+        ),
         // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
       ],
       child: MyApp(startWidget: widget),
@@ -64,13 +68,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: startWidget,
+    final themeCubit = context.read<ThemeCubit>();
+    return BlocBuilder<ThemeCubit, AppThemeMode>(
+      builder: (BuildContext context, state) { return  MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: startWidget,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: themeCubit.themeMode,
+      ); },
 
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
     );
   }
 }

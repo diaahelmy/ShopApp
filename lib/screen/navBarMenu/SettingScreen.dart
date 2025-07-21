@@ -1,124 +1,203 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/cubit/settings/SettingsCubit.dart';
 import 'package:shopapp/log_addacount/cubit/settings/settings_state.dart';
 import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
+import 'package:shopapp/screen/SwitchThemes.dart';
 
 class SettingScreen extends StatelessWidget {
-   SettingScreen({super.key});
+  SettingScreen({super.key});
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-
-
-
     return BlocConsumer<SettingsCubit, SettingsState>(
       listener: (context, state) {
-      if (state is UserDataUpdatedState) {
-        var cubit = SettingsCubit.get(context);
-        nameController.text = cubit.name;
-        emailController.text = cubit.email;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Updated successfully')),
-        );
-      }
+        if (state is UserDataUpdatedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Updated successfully')),
+          );
+        }
       },
       builder: (context, state) {
         final cubit = SettingsCubit.get(context);
 
-        nameController.text = cubit.name;
-        emailController.text = cubit.email;
         if (state is SettingsLoadingState) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
+
+
+        nameController.text = nameController.text.isEmpty ? cubit.name : nameController.text;
+        emailController.text = emailController.text.isEmpty ? cubit.email : emailController.text;
+
         return Scaffold(
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                /// 🌙 الوضع الليلي
-                SwitchListTile(
-                  title: const Text("Dark Mode"),
-                  value: cubit.isDark,
-                  onChanged: (value) => cubit.toggleTheme(),
-                ),
-
-                const Divider(),
-
-                /// 🌐 تغيير اللغة
-                ListTile(
-                  title: const Text("Language"),
-                  trailing: DropdownButton<String>(
-                    value: cubit.language,
-                    items: const [
-                      DropdownMenuItem(value: 'en', child: Text("English")),
-                      DropdownMenuItem(value: 'ar', child: Text("العربية")),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) cubit.changeLanguage(value);
-                    },
-                  ),
-                ),
-
-                const Divider(),
-
-                /// 👤 تعديل بيانات المستخدم
-                defaultFormField(
-                  controler: nameController,
-                  type: TextInputType.name,
-                  prefix: Icons.person,
-                  lable: "Name",
-                ),
-                const SizedBox(height: 10),
-                defaultFormField(
-                  controler: emailController,
-                  type: TextInputType.emailAddress,
-                  prefix: Icons.email,
-                  lable: "Email",
+                _buildCard(
+                  context: context,
+                  title: "Profile",
+                  icon: Icons.person,
+                  children: [
+                    _buildLabeledInput("Name", nameController, Icons.person),
+                    const SizedBox(height: 12),
+                    _buildLabeledInput("Email", emailController, Icons.email),
+                    const SizedBox(height: 20),
+                    defaultButton(
+                      label: "Save",
+                      onPressed: () {
+                        cubit.updateUserDataFromAPI(
+                          newName: nameController.text,
+                          newEmail: emailController.text,
+                          userId: Cache.getData(key: 'userId'),
+                          token: Cache.getData(key: 'token'),
+                        );
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-
-                defaultButton(
-                  label: "Save",
-                  onPressed: () {
-                    cubit.updateUserDataFromAPI(
-                      newName: nameController.text,
-                      newEmail: emailController.text,
-                      userId: Cache.getData(key: 'userId'),
-                      token: Cache.getData(key: 'token'),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Profile updated")),
-                    );
-                  },
+                _buildCard(
+                  context: context,
+                  title: "App Settings",
+                  icon: Icons.settings,
+                  children: [
+                    _buildTileWithTrailing(
+                      icon: Icons.language,
+                      title: "Language",
+                      trailing: _buildLanguageDropdown(cubit),
+                    ),
+                    const Divider(),
+                    _buildTileWithTrailing(
+                      icon: Icons.brightness_6,
+                      title: "Theme",
+                      trailing: IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios, size: 18),
+                        onPressed: () => navigateTo(context, const SwitchThemes()),
+                      ),
+                    ),
+                  ],
                 ),
-
-                const Divider(),
-
-                defaultButton(
-                  label: "Logout",
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    Cache.removeData(key: 'token');
-                    Cache.removeData(key: 'name');
-                    Cache.removeData(key: 'userId');
-                    Cache.removeData(key: 'email').then((value) {
-                      navigateAndFinsh(context, LoginScreen());
-                    });
-                  },
+                const SizedBox(height: 16),
+                _buildCard(
+                  context: context,
+                  title: "Security",
+                  icon: Icons.lock,
+                  children: [
+                    defaultButton(
+                      label: "Logout",
+                      backgroundColor: Colors.red,
+                      onPressed: () {
+                        Cache.removeData(key: 'token');
+                        Cache.removeData(key: 'name');
+                        Cache.removeData(key: 'userId');
+                        Cache.removeData(key: 'email').then((_) {
+                          navigateAndFinsh(context, LoginScreen());
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         );
-
       },
+    );
+  }
+
+  Widget _buildCard({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withAlpha((0.85 * 255).round()),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: Theme.of(context).iconTheme.color),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: GoogleFonts.roboto(
+                  textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTileWithTrailing({
+    required IconData icon,
+     String? title,
+    required Widget trailing,
+  }) {
+    return Row(
+      children: [
+        Icon(icon),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            title!,
+            style: GoogleFonts.roboto(fontSize: 16),
+          ),
+        ),
+        trailing,
+      ],
+    );
+  }
+
+  Widget _buildLabeledInput(String label, TextEditingController controller, IconData icon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        defaultFormField(
+          controler: controller,
+          type: TextInputType.text,
+          prefix: icon,
+          lable: label,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLanguageDropdown(SettingsCubit cubit) {
+    return DropdownButton<String>(
+      value: cubit.language,
+      underline: const SizedBox(),
+      onChanged: (value) {
+        if (value != null) cubit.changeLanguage(value);
+      },
+      items: const [
+        DropdownMenuItem(value: 'en', child: Text("English")),
+        DropdownMenuItem(value: 'ar', child: Text("العربية")),
+      ],
     );
   }
 }

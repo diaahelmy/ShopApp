@@ -197,6 +197,7 @@ Widget defaultFormField({
   onFieldSubmitted: onSubmit,
   onChanged: onChange,
   validator: validator,
+
   decoration: InputDecoration(
     suffixIcon: suffixIcon != null
         ? IconButton(icon: Icon(suffixIcon), onPressed: onSuffixTap)
