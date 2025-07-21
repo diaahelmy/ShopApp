@@ -6,6 +6,7 @@
 - ❤️ **Add/remove products from favorites**
 - 👤 **Manage user profile**
 - 🔔 **Toast and loading indicators for smooth UX**
+- 🎨 **Custom App Icon and App Name** (Updated for **iOS** & **Android**)
 ## 🚀 Getting Started
 
 This project is built using Flutter.  
