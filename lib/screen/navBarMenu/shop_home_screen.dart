@@ -17,6 +17,22 @@ class ShopHomeScreen extends StatefulWidget {
 class _ShopHomeScreenState extends State<ShopHomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        CubitHomeScreen.get(context).loadMoreProducts();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitHomeScreen, StatesShopHome>(
@@ -27,28 +43,19 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
             current is ProductErrorState;
       },
       builder: (context, state) {
-
-
         var cubit = CubitHomeScreen.get(context);
 
         if (state is ProductSuccessState) {
           return RefreshIndicator(
             onRefresh: () async => cubit.getProducts(forceRefresh: true),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollNotification.metrics.pixels >=
-                    scrollNotification.metrics.maxScrollExtent - 200) {
-                  cubit.loadMoreProducts();
-                }
-                return false;
-              },
-              child: productBuilder(
-                context: context,
-                scrollController: _scrollController,
-                products: cubit.products.take(cubit.productsPerPage).toList(),
-                showCategories: true,
-                categories: cubit.categories,
-              ),
+            child: productBuilder(
+              context: context,
+              scrollController: _scrollController,
+              products: cubit.products,
+              isLoadingMore: cubit.isLoadingMore ,
+              loadMoreError: cubit.loadMoreError,
+              showCategories: true,
+              categories: cubit.categories,
             ),
           );
         } else if (state is ProductErrorState) {
@@ -60,11 +67,14 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
                 const SizedBox(height: 10),
                 Text(
                   "No Internet Connection",
-                  style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-               onPressed: () => cubit.getProducts(forceRefresh: true),
+                  onPressed: () => cubit.getProducts(forceRefresh: true),
                   child: const Text("Retry"),
                 ),
               ],
@@ -82,7 +92,7 @@ Widget buildCategoryListHome(
   List<CategoryModel> categories,
   BuildContext context,
 ) {
-  return Column (
+  return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
@@ -101,7 +111,8 @@ Widget buildCategoryListHome(
           itemBuilder: (context, index) {
             final category = categories[index];
             return GestureDetector(
-              onTap: () => navigateTo(context, ProdectsItem(category: category)),
+              onTap: () =>
+                  navigateTo(context, ProdectsItem(category: category)),
               child: Column(
                 children: [
                   Container(

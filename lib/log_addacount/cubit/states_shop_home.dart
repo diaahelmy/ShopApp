@@ -21,4 +21,9 @@
     CategoriesErrorState(this.error);
   }
 
+  class ProductLoadMoreState extends StatesShopHome {}
 
+  class ProductLoadMoreErrorState extends StatesShopHome {
+    final String error;
+    ProductLoadMoreErrorState(this.error);
+  }

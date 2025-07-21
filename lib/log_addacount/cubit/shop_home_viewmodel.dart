@@ -17,16 +17,10 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
 
   int currentIndex = 0;
 
-final  List<BottomNavigationBarItem> bottomItems = [
+  final List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.category_rounded),
-      label: 'Categories',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.favorite_border),
-      label: 'Favorites',
-    ),
+    BottomNavigationBarItem(icon: Icon(Icons.category_rounded), label: 'Categories'),
+    BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: 'Favorites'),
     BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
   ];
 
@@ -35,68 +29,97 @@ final  List<BottomNavigationBarItem> bottomItems = [
     emit(ShopChangeBottomNavStates());
   }
 
+  bool loadMoreError = false;
+
   List<CategoryModel> categories = [];
 
   List<ProductModel> products = [];
-  int productsPerPage = 10;
 
-  List<Widget> get  bottomScreen => [
+  List<Widget> get bottomScreen => [
     ShopHomeScreen(),
     CategoriesScreen(),
-    FavoritesScreen(allProducts:products,),
+    FavoritesScreen(allProducts: products),
     SettingScreen(),
   ];
 
+  bool isLoadingMore = false;
+  bool hasMoreData = true;
+  int offset = 0;
+  final int limit = 10;
 
-  void loadMoreProducts() {
-    if (productsPerPage + 10 <= products.length) {
-      productsPerPage += 10;
-    } else {
-      productsPerPage = products.length;
-    }
-    emit(ProductSuccessState());
-  }
 
   void getProducts({bool forceRefresh = false}) {
-    if (products.isEmpty || forceRefresh) {
-      emit(ProductLoadingState());
-
-      DioHelper.getData(url: PRODUCTS)
-          .then((value) {
-
-            products = (value.data as List)
-                .map((e) => ProductModel.fromJson(e))
-                .toList();
-
-            productsPerPage = products.length >= 20 ? 20 : products.length;
-
-            emit(ProductSuccessState());
-          })
-          .catchError((error) {
-            emit(ProductErrorState(error.toString()));
-          });
-    } else {
-
+    if (forceRefresh) {
+      products.clear();
+      offset = 0;
+      hasMoreData = true;
     }
+
+    emit(ProductLoadingState());
+
+    DioHelper.getData(url: "$PRODUCTS?limit=$limit&offset=$offset")
+        .then((value) {
+      List<ProductModel> newProducts = (value.data as List)
+          .map((e) => ProductModel.fromJson(e))
+          .toList();
+
+      if (newProducts.length < limit) {
+        hasMoreData = false; // مفيش صفحات تانية
+      }
+
+      products.addAll(newProducts);
+      offset += newProducts.length;
+
+      emit(ProductSuccessState());
+    }).catchError((error) {
+      emit(ProductErrorState(error.toString()));
+    });
+  }
+
+  /// تحميل المزيد
+  void loadMoreProducts() {
+    if (isLoadingMore || !hasMoreData) return;
+
+    isLoadingMore = true;
+    loadMoreError = false;
+    emit(ProductLoadMoreState());
+
+    DioHelper.getData(url: "$PRODUCTS?limit=$limit&offset=$offset")
+        .then((value) {
+      List<ProductModel> newProducts = (value.data as List)
+          .map((e) => ProductModel.fromJson(e))
+          .toList();
+
+      if (newProducts.isEmpty) {
+        hasMoreData = false;
+      } else {
+        products.addAll(newProducts);
+        offset += newProducts.length;
+      }
+
+      isLoadingMore = false;
+      emit(ProductSuccessState());
+    }).catchError((error) {
+      isLoadingMore = false;
+      loadMoreError = true; // حصل خطأ في التحميل
+      emit(ProductSuccessState()); // نبقى في نفس الحالة بس نعرض الخطأ تحت
+    });
   }
 
   void getCategories({bool forceRefresh = false}) {
-    if(categories.isEmpty|| forceRefresh) {
+    if (categories.isEmpty || forceRefresh) {
       emit(CategoriesLoadingState());
 
       DioHelper.getData(url: CATEGORIES)
           .then((value) {
-
         categories = (value.data as List)
             .map((e) => CategoryModel.fromJson(e))
             .toList();
 
         emit(CategoriesSuccessState());
-      })
-          .catchError((error) {
+      }).catchError((error) {
         emit(CategoriesErrorState(error.toString()));
       });
-    }else{
     }
   }
 }

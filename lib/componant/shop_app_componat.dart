@@ -128,56 +128,70 @@ Widget productBuilder({
   bool showRecommendedTitle = true,
   List<CategoryModel> categories = const [],
   required BuildContext context,
+  bool isLoadingMore = false,
+  bool loadMoreError = false,
 }) => SafeArea(
-  child: SingleChildScrollView(
-    controller: scrollController,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (showCategories) buildCategoryListHome(categories, context),
-          SizedBox(height: 4),
-          if (showRecommendedTitle)
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 8),
-              child: Text(
-                'Recommended ',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          GridView.builder(
-            shrinkWrap: true,
-            itemCount: products.length,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 14,
-              mainAxisSpacing: 14,
-              childAspectRatio: 0.58,
-            ),
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                navigateTo(
-                  context,
-                  Productdetailsscreen(product: products[index]),
-                );
-              },
-              child: buildProductCard(
-                product: products[index],
-                context: context,
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    child: ListView(
+      controller: scrollController,
+      children: [
+        if (showCategories) buildCategoryListHome(categories, context),
+        const SizedBox(height: 4),
+        if (showRecommendedTitle)
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              'Recommended',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-        ],
-      ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: products.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 14,
+            childAspectRatio: 0.58,
+          ),
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () {
+              navigateTo(
+                context,
+                Productdetailsscreen(product: products[index]),
+              );
+            },
+            child: buildProductCard(
+              product: products[index],
+              context: context,
+            ),
+          ),
+        ),
+        if (loadMoreError)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                "No Internet Connection",
+                style: TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            ),
+          ),
+
+        if (isLoadingMore)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+      ],
     ),
   ),
 );
-
 Widget defaultFormField({
   Function(String)? onSubmit,
   Function(String)? onChange,
