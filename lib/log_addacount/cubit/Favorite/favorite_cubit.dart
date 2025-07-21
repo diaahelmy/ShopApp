@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteState.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_state.dart';
 import 'package:shopapp/network/local/Cache.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
@@ -13,7 +13,6 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       emit(FavoriteState(
         favoriteIds: saved.map((e) => int.parse(e)).toSet(),
       ));
-      print("Loaded favorites from cache: $saved");
     }
   }
 
@@ -35,7 +34,6 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       key: 'favorites',
       value: current.map((e) => e.toString()).toList(),
     );
-    print("Saved favorites: ${current.toList()}");
   }
 
   bool isFavorite(int productId) {

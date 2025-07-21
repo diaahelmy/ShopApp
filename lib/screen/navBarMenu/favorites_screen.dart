@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteState.dart';
-import 'package:shopapp/model/productmodel.dart';
+import 'package:shopapp/componant/shop_app_componat.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_cubit.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_state.dart';
+import 'package:shopapp/model/product_model.dart';
+
 
 class FavoritesScreen extends StatelessWidget {
   final List<ProductModel> allProducts;

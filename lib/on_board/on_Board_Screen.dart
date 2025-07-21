@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' ;
-import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/loginScreen.dart';
+import 'package:shopapp/componant/shop_app_componat.dart';
+import 'package:shopapp/log_addacount/login_screen.dart';
 import 'package:shopapp/network/local/Cache.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,7 +17,7 @@ class BoardingModel {
 }
 
 class OnBoardScreen extends StatefulWidget {
-  OnBoardScreen({super.key});
+  const OnBoardScreen({super.key});
 
   @override
   State<OnBoardScreen> createState() => _OnBoardScreenState();
@@ -28,8 +27,9 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   var boardController = PageController();
   bool islist = false;
 
-  void submit(){
+  void submit() {
     Cache.saveData(key: 'onBoarding', value: true).then((saved) {
+      if (!mounted) return;
       if (saved) {
         navigateAndFinsh(context, LoginScreen());
       }

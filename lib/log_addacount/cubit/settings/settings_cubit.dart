@@ -1,10 +1,7 @@
-
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/componant/shopappcomponat.dart';
 import 'package:shopapp/log_addacount/cubit/settings/settings_state.dart';
 import 'package:shopapp/network/local/Cache.dart';
-import 'package:shopapp/network/remote/dioHelper.dart';
+import 'package:shopapp/network/remote/dio_helper.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit() : super(SettingsInitial());
@@ -31,11 +28,13 @@ class SettingsCubit extends Cubit<SettingsState> {
     email = newEmail;
     emit(UserDataUpdatedState());
   }
+
   void loadUserFromCache() {
     name = Cache.getData(key: 'name') ?? '';
     email = Cache.getData(key: 'email') ?? '';
     emit(SettingsLoadedFromCacheState());
   }
+
   void updateUserDataFromAPI({
     required String newName,
     required String newEmail,
@@ -45,26 +44,24 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(SettingsLoadingState());
 
     DioHelper.putData(
-      url: 'v1/users/$userId',
-      token: token,
-      data: {
-        "name": newName,
-        "email": newEmail,
-      },
-    ).then((value) {
-      // ⬅ هنا بنخزنهم في المتغيرات الموجودة في الكلاس
-      name = value.data['name'];
-      email = value.data['email'];
-      // ✅ خزّنهم في الكاش
-      Cache.saveData(key: 'name', value: name);
-      Cache.saveData(key: 'email', value: email);
+          url: 'v1/users/$userId',
+          token: token,
+          data: {"name": newName, "email": newEmail},
+        )
+        .then((value) {
+          // ⬅ هنا بنخزنهم في المتغيرات الموجودة في الكلاس
+          name = value.data['name'];
+          email = value.data['email'];
+          // ✅ خزّنهم في الكاش
+          Cache.saveData(key: 'name', value: name);
+          Cache.saveData(key: 'email', value: email);
 
-      Cache.saveData(key: 'name', value: newName);
-      Cache.saveData(key: 'email', value: newEmail);
-      emit(UserDataUpdatedState());
-    }).catchError((error) {
-      print("Update Error: $error");
-      emit(SettingsErrorState(error.toString()));
-    });
+          Cache.saveData(key: 'name', value: newName);
+          Cache.saveData(key: 'email', value: newEmail);
+          emit(UserDataUpdatedState());
+        })
+        .catchError((error) {
+          emit(SettingsErrorState(error.toString()));
+        });
   }
 }

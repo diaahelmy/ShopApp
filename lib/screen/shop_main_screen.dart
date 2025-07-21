@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
-import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
+import 'package:shopapp/log_addacount/cubit/shop_home_viewmodel.dart';
+import 'package:shopapp/log_addacount/cubit/states_shop_home.dart';
 
 class ShopMainScreen extends StatelessWidget {
   const ShopMainScreen({super.key});

@@ -1,21 +1,17 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
-import 'package:shopapp/log_addacount/cubit/statusLogin.dart';
-import 'package:shopapp/log_addacount/loginScreen.dart';
-import 'package:shopapp/model/RegisterModel.dart';
-import 'package:shopapp/network/local/Cache.dart';
-import 'package:shopapp/screen/ShopMainScreen.dart';
+import 'package:shopapp/componant/shop_app_componat.dart';
+import 'package:shopapp/log_addacount/cubit/cubit_login.dart';
+import 'package:shopapp/log_addacount/login_screen.dart';
+import 'package:shopapp/log_addacount/cubit/status_login.dart';
 
-class Registerscreen extends StatelessWidget {
-  Registerscreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
 
   final ValueNotifier<bool> obscurePassword = ValueNotifier<bool>(true);

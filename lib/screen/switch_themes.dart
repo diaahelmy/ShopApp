@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/log_addacount/cubit/themes/ThemeCubit.dart';
+import 'package:shopapp/log_addacount/cubit/themes/theme_cubit.dart';
 
 class SwitchThemes extends StatelessWidget {
   const SwitchThemes({super.key});

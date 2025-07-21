@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
-import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
-import 'package:shopapp/model/productmodel.dart';
-import 'package:shopapp/screen/ProdectsItem.dart';
+import 'package:shopapp/componant/shop_app_componat.dart';
+
+import 'package:shopapp/log_addacount/cubit/shop_home_viewmodel.dart';
+import 'package:shopapp/log_addacount/cubit/states_shop_home.dart';
+import 'package:shopapp/model/product_model.dart';
+import 'package:shopapp/screen/prodects_item.dart';
+
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key, this.category});

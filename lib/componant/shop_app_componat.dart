@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteState.dart';
-import 'package:shopapp/model/productmodel.dart';
-import 'package:shopapp/screen/ProductDetailsScreen.dart';
-import 'package:shopapp/screen/navBarMenu/ShopHomeScreen.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_cubit.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_state.dart';
+import 'package:shopapp/model/product_model.dart';
+import 'package:shopapp/screen/navBarMenu/shop_home_screen.dart';
+import 'package:shopapp/screen/product_details_screen.dart';
+
 
 void navigateTo(context, widget) =>
     Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
@@ -64,7 +64,9 @@ Widget buildProductCard({
               right: 10,
               child: BlocBuilder<FavoriteCubit, FavoriteState>(
                 builder: (context, favState) {
-                  final isFav = FavoriteCubit.get(context).isFavorite(product.id);
+                  final isFav = FavoriteCubit.get(
+                    context,
+                  ).isFavorite(product.id);
                   return GestureDetector(
                     onTap: () {
                       FavoriteCubit.get(context).toggleFavorite(product.id);
@@ -78,7 +80,9 @@ Widget buildProductCard({
                         child: Icon(
                           isFav ? Icons.favorite : Icons.favorite_border,
                           size: 18,
-                          color: isFav ? Colors.red : Theme.of(context).colorScheme.onSurface,
+                          color: isFav
+                              ? Colors.red
+                              : Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -86,7 +90,6 @@ Widget buildProductCard({
                 },
               ),
             ),
-
           ],
         ),
       ),

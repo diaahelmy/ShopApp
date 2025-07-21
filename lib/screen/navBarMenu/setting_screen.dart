@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopapp/componant/shopappcomponat.dart';
-import 'package:shopapp/log_addacount/cubit/settings/SettingsCubit.dart';
+import 'package:shopapp/componant/shop_app_componat.dart';
+import 'package:shopapp/log_addacount/login_screen.dart';
+import 'package:shopapp/log_addacount/cubit/settings/settings_cubit.dart';
 import 'package:shopapp/log_addacount/cubit/settings/settings_state.dart';
-import 'package:shopapp/log_addacount/loginScreen.dart';
 import 'package:shopapp/network/local/Cache.dart';
-import 'package:shopapp/screen/SwitchThemes.dart';
+import 'package:shopapp/screen/switch_themes.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
@@ -93,13 +93,14 @@ class SettingScreen extends StatelessWidget {
                     defaultButton(
                       label: "Logout",
                       backgroundColor: Colors.red,
-                      onPressed: () {
-                        Cache.removeData(key: 'token');
-                        Cache.removeData(key: 'name');
-                        Cache.removeData(key: 'userId');
-                        Cache.removeData(key: 'email').then((_) {
-                          navigateAndFinsh(context, LoginScreen());
-                        });
+                      onPressed: () async {
+                        await Cache.removeData(key: 'token');
+                        await Cache.removeData(key: 'name');
+                        await Cache.removeData(key: 'userId');
+                        await Cache.removeData(key: 'email');
+
+                        if (!context.mounted) return;
+                        navigateAndFinsh(context, LoginScreen());
                       },
                     ),
                   ],

@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
-import 'package:shopapp/model/productmodel.dart';
-import 'package:shopapp/network/remote/dioHelper.dart';
-import 'package:shopapp/network/endPoint.dart';
-import 'package:shopapp/screen/navBarMenu/FavoritesScreen.dart';
-import 'package:shopapp/screen/navBarMenu/SettingScreen.dart';
-import 'package:shopapp/screen/navBarMenu/ShopHomeScreen.dart';
-import 'package:shopapp/screen/navBarMenu/categoriesScreen.dart';
+import 'package:shopapp/log_addacount/cubit/states_shop_home.dart';
+import 'package:shopapp/model/product_model.dart';
+import 'package:shopapp/network/end_point.dart';
+import 'package:shopapp/network/remote/dio_helper.dart';
+
+import 'package:shopapp/screen/navBarMenu/categories_screen.dart';
+import 'package:shopapp/screen/navBarMenu/favorites_screen.dart';
+import 'package:shopapp/screen/navBarMenu/setting_screen.dart';
+import 'package:shopapp/screen/navBarMenu/shop_home_screen.dart';
 
 class CubitHomeScreen extends Cubit<StatesShopHome> {
   CubitHomeScreen() : super(ShopInitialHomeStates());
@@ -63,7 +63,6 @@ final  List<BottomNavigationBarItem> bottomItems = [
 
       DioHelper.getData(url: PRODUCTS)
           .then((value) {
-            print('API Response: ${value.data}');
 
             products = (value.data as List)
                 .map((e) => ProductModel.fromJson(e))
@@ -74,7 +73,6 @@ final  List<BottomNavigationBarItem> bottomItems = [
             emit(ProductSuccessState());
           })
           .catchError((error) {
-            print('Error: $error');
             emit(ProductErrorState(error.toString()));
           });
     } else {
@@ -88,7 +86,6 @@ final  List<BottomNavigationBarItem> bottomItems = [
 
       DioHelper.getData(url: CATEGORIES)
           .then((value) {
-        print('Categories API Response: ${value.data}');
 
         categories = (value.data as List)
             .map((e) => CategoryModel.fromJson(e))
@@ -97,7 +94,6 @@ final  List<BottomNavigationBarItem> bottomItems = [
         emit(CategoriesSuccessState());
       })
           .catchError((error) {
-        print('Categories Error: $error');
         emit(CategoriesErrorState(error.toString()));
       });
     }else{

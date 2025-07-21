@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:shopapp/core/theme/app_colors.dart';
-import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
-import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
-import 'package:shopapp/log_addacount/cubit/cubitLogin.dart';
-import 'package:shopapp/log_addacount/cubit/settings/SettingsCubit.dart';
-import 'package:shopapp/log_addacount/cubit/themes/ThemeCubit.dart';
-import 'package:shopapp/log_addacount/loginScreen.dart';
+import 'package:shopapp/core/theme/app_theme.dart';
+import 'package:shopapp/log_addacount/cubit/Favorite/favorite_cubit.dart';
+import 'package:shopapp/log_addacount/cubit/cubit_login.dart';
+import 'package:shopapp/log_addacount/cubit/settings/settings_cubit.dart';
+import 'package:shopapp/log_addacount/cubit/shop_home_viewmodel.dart';
+import 'package:shopapp/log_addacount/login_screen.dart';
+import 'package:shopapp/log_addacount/cubit/themes/theme_cubit.dart';
 import 'package:shopapp/network/local/Cache.dart';
-import 'package:shopapp/network/remote/dioHelper.dart';
-import 'package:shopapp/on_board/on_Board_Screen.dart';
-import 'package:shopapp/screen/ShopMainScreen.dart';
+import 'package:shopapp/network/remote/dio_helper.dart';
+import 'package:shopapp/on_board/on_board_screen.dart';
+import 'package:shopapp/screen/shop_main_screen.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await Cache.init();
 
@@ -29,9 +27,8 @@ void main() async {
   final String? token = Cache.getData(key: 'token') as String?;
 
   final Widget startWidget = (onBoarding != null)
-      ? (token != null ? const ShopMainScreen() :  LoginScreen())
-      :  OnBoardScreen();
-  FlutterNativeSplash.remove();
+      ? (token != null ? const ShopMainScreen() : LoginScreen())
+      : OnBoardScreen();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -40,18 +37,12 @@ void main() async {
             ..getProducts()
             ..getCategories(),
         ),
-        BlocProvider<ShopLoginCubit>(
-          create: (context) => ShopLoginCubit(),
-        ),
-        BlocProvider<FavoriteCubit>.value(
-          value: favoriteCubit,
-        ),
+        BlocProvider<ShopLoginCubit>(create: (context) => ShopLoginCubit()),
+        BlocProvider<FavoriteCubit>.value(value: favoriteCubit),
         BlocProvider<SettingsCubit>(
           create: (context) => SettingsCubit()..loadUserFromCache(),
         ),
-        BlocProvider(
-          create: (_) => ThemeCubit(),
-        ),
+        BlocProvider(create: (_) => ThemeCubit()),
       ],
       child: MyApp(startWidget: startWidget, themeCubit: themeCubit),
     ),
