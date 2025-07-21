@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shopapp/core/theme/app_colors.dart';
 import 'package:shopapp/log_addacount/cubit/Favorite/FavoriteCubit.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
@@ -13,7 +14,8 @@ import 'package:shopapp/on_board/on_Board_Screen.dart';
 import 'package:shopapp/screen/ShopMainScreen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   DioHelper.init();
   await Cache.init();
 
@@ -29,7 +31,7 @@ void main() async {
   final Widget startWidget = (onBoarding != null)
       ? (token != null ? const ShopMainScreen() :  LoginScreen())
       :  OnBoardScreen();
-
+  FlutterNativeSplash.remove();
   runApp(
     MultiBlocProvider(
       providers: [
