@@ -16,11 +16,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await Cache.init();
-
+  final themeCubit = ThemeCubit();
   final favoriteCubit = FavoriteCubit();
+  await Future.delayed(const Duration(milliseconds: 100)); // optional delay for loading
+
   await favoriteCubit.loadFavorites();
   bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
   String? token = Cache.getData(key: 'token') as String?;
+
   Widget widget;
 
   if(onBoarding != null){
@@ -55,29 +58,32 @@ void main() async {
         ),
         // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
       ],
-      child: MyApp(startWidget: widget),
+      child: MyApp(startWidget: widget, themeCubit: themeCubit,),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   final Widget ? startWidget;
-
-   MyApp({ this.startWidget});
+  final ThemeCubit themeCubit;
+   MyApp({ this.startWidget, required this.themeCubit});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final themeCubit = context.read<ThemeCubit>();
-    return BlocBuilder<ThemeCubit, AppThemeMode>(
-      builder: (BuildContext context, state) { return  MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: startWidget,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: themeCubit.themeMode,
-      ); },
 
+    return BlocProvider.value(
+      value: themeCubit,
+      child: BlocBuilder<ThemeCubit, AppThemeMode>(
+        builder: (BuildContext context, state) { return  MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: startWidget,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeCubit.currentThemeMode,
+        ); },
+
+      ),
     );
   }
 }
