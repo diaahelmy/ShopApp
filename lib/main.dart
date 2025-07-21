@@ -16,26 +16,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await Cache.init();
+
   final themeCubit = ThemeCubit();
   final favoriteCubit = FavoriteCubit();
-  await Future.delayed(const Duration(milliseconds: 100)); // optional delay for loading
 
+  await Future.delayed(const Duration(milliseconds: 100)); // optional delay
   await favoriteCubit.loadFavorites();
-  bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
-  String? token = Cache.getData(key: 'token') as String?;
 
-  Widget widget;
+  final bool? onBoarding = Cache.getData(key: 'onBoarding') as bool?;
+  final String? token = Cache.getData(key: 'token') as String?;
 
-  if(onBoarding != null){
-    if(token != null){
-      widget = ShopmainScreen();
-    }else{
-      widget = LoginScreen();
-    }
+  final Widget startWidget = (onBoarding != null)
+      ? (token != null ? const ShopMainScreen() :  LoginScreen())
+      :  OnBoardScreen();
 
-  }else{
-    widget = OnBoardScreen();
-  }
   runApp(
     MultiBlocProvider(
       providers: [
@@ -56,33 +50,32 @@ void main() async {
         BlocProvider(
           create: (_) => ThemeCubit(),
         ),
-        // BlocProvider<AnotherCubit>(create: (context) => AnotherCubit()), // لو عايز تضيف Cubits تانية
       ],
-      child: MyApp(startWidget: widget, themeCubit: themeCubit,),
+      child: MyApp(startWidget: startWidget, themeCubit: themeCubit),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final Widget ? startWidget;
+  final Widget startWidget;
   final ThemeCubit themeCubit;
-   MyApp({ this.startWidget, required this.themeCubit});
 
-  // This widget is the root of your application.
+  const MyApp({required this.startWidget, required this.themeCubit, super.key});
+
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider.value(
       value: themeCubit,
       child: BlocBuilder<ThemeCubit, AppThemeMode>(
-        builder: (BuildContext context, state) { return  MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: startWidget,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: themeCubit.currentThemeMode,
-        ); },
-
+        builder: (BuildContext context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: startWidget,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeCubit.currentThemeMode,
+          );
+        },
       ),
     );
   }

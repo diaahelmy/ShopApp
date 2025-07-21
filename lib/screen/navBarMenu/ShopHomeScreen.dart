@@ -8,14 +8,14 @@ import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 import 'package:shopapp/model/productmodel.dart';
 import 'package:shopapp/screen/ProdectsItem.dart';
 
-class ShopHomescreen extends StatefulWidget {
-  const ShopHomescreen({super.key});
+class ShopHomeScreen extends StatefulWidget {
+  const ShopHomeScreen({super.key});
 
   @override
-  State<ShopHomescreen> createState() => _ShopHomescreenState();
+  State<ShopHomeScreen> createState() => _ShopHomeScreenState();
 }
 
-class _ShopHomescreenState extends State<ShopHomescreen> {
+class _ShopHomeScreenState extends State<ShopHomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -23,7 +23,6 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
     return BlocConsumer<CubitHomeScreen, StatesShopHome>(
       listener: (context, state) {},
       buildWhen: (previous, current) {
-        // مش كل الحالات تسبب rebuild
         return current is ProductLoadingState ||
             current is ProductSuccessState ||
             current is ProductErrorState;
@@ -33,15 +32,9 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
 
         var cubit = CubitHomeScreen.get(context);
 
-        if (state is ProductLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is ProductSuccessState && cubit.products.isEmpty) {
-          return const Center(child: Text("No data now"));
-        } else if (state is ProductSuccessState) {
+        if (state is ProductSuccessState) {
           return RefreshIndicator(
-            onRefresh: () async {
-              cubit.getProducts(forceRefresh: true); // Refresh logic
-            },
+            onRefresh: () async => cubit.getProducts(forceRefresh: true),
             child: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
                 if (scrollNotification.metrics.pixels >=
@@ -64,7 +57,7 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.wifi_off, size: 80, color: Colors.grey),
+                const Icon(Icons.wifi_off, size: 80, color: Colors.grey),
                 const SizedBox(height: 10),
                 Text(
                   "No Internet Connection",
@@ -72,9 +65,7 @@ class _ShopHomescreenState extends State<ShopHomescreen> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    CubitHomeScreen.get(context).getProducts(forceRefresh: true);
-                  },
+               onPressed: () => cubit.getProducts(forceRefresh: true),
                   child: const Text("Retry"),
                 ),
               ],
@@ -92,7 +83,7 @@ Widget buildCategoryListHome(
   List<CategoryModel> categories,
   BuildContext context,
 ) {
-  return Column(
+  return Column (
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
@@ -111,9 +102,7 @@ Widget buildCategoryListHome(
           itemBuilder: (context, index) {
             final category = categories[index];
             return GestureDetector(
-              onTap: () {
-                navigateTo(context, ProdectsItem(category: category));
-              },
+              onTap: () => navigateTo(context, ProdectsItem(category: category)),
               child: Column(
                 children: [
                   Container(

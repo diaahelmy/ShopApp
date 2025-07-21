@@ -155,7 +155,7 @@ class LoginScreen extends StatelessWidget {
           if(state is ShopLoginSuccessState){
             if(state.loginModel.access_token!.isNotEmpty){
               Cache.saveData(key: 'token', value: state.loginModel.access_token!).then((onValue){
-                navigateAndFinsh(context, ShopmainScreen());
+                navigateAndFinsh(context, ShopMainScreen());
               });
 
             }else{

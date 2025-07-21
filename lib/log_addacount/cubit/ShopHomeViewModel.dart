@@ -17,7 +17,7 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
 
   int currentIndex = 0;
 
-  List<BottomNavigationBarItem> bottomItems = [
+final  List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
     BottomNavigationBarItem(
       icon: Icon(Icons.category_rounded),
@@ -41,7 +41,7 @@ class CubitHomeScreen extends Cubit<StatesShopHome> {
   int productsPerPage = 10;
 
   List<Widget> get  bottomScreen => [
-    ShopHomescreen(),
+    ShopHomeScreen(),
     CategoriesScreen(),
     FavoritesScreen(allProducts:products,),
     SettingScreen(),

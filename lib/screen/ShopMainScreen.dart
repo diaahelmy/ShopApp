@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopapp/log_addacount/cubit/StatesShopHome.dart';
 import 'package:shopapp/log_addacount/cubit/ShopHomeViewModel.dart';
 
-class ShopmainScreen extends StatelessWidget {
-  const ShopmainScreen({super.key});
+class ShopMainScreen extends StatelessWidget {
+  const ShopMainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

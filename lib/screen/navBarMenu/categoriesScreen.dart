@@ -16,34 +16,54 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = CubitHomeScreen.get(context).categories;
 
-  return  BlocBuilder<CubitHomeScreen, StatesShopHome>(
-
-      buildWhen: (previous, current) {
-        // مش كل الحالات تسبب rebuild
-        return current is CategoriesLoadingState ||
-            current is CategoriesSuccessState ||
-            current is CategoriesErrorState;
-      },
+    return BlocBuilder<CubitHomeScreen, StatesShopHome>(
+      buildWhen: (previous, current) =>
+      current is CategoriesLoadingState ||
+          current is CategoriesSuccessState ||
+          current is CategoriesErrorState,
       builder: (BuildContext context, StatesShopHome state) {
         if (state is CategoriesLoadingState) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is CategoriesSuccessState && categories.isEmpty) {
+        }
+
+        if (state is CategoriesErrorState) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.wifi_off, size: 80, color: Colors.grey),
+                const SizedBox(height: 10),
+                Text(
+                  "Failed to load categories.",
+                  style: GoogleFonts.poppins(fontSize: 16),
+                ),
+                ElevatedButton(
+                  onPressed: () =>
+                      CubitHomeScreen.get(context).getCategories(forceRefresh: true),
+                  child: const Text("Retry"),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (state is CategoriesSuccessState && categories.isEmpty) {
           return const Center(child: Text("No data now"));
-        } else if (state is CategoriesSuccessState) {
+        }
+
+        if (state is CategoriesSuccessState) {
           return Scaffold(
             body: RefreshIndicator(
-              onRefresh: () async {
-                CubitHomeScreen.get(context).getCategories(forceRefresh: true);
-              },
+              onRefresh: () async =>
+                  CubitHomeScreen.get(context).getCategories(forceRefresh: true),
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   final category = categories[index];
                   return GestureDetector(
-                    onTap: () {
-                      navigateTo(context, ProdectsItem(category: category));
-                    },
+                    onTap: () =>
+                        navigateTo(context, ProdectsItem(category: category)),
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       padding: const EdgeInsets.all(12),
@@ -72,8 +92,8 @@ class CategoriesScreen extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
-                              maxLines: 2, // يخليه ينزل لسطر تاني لو محتاج
-                              overflow: TextOverflow.ellipsis, // يحط ... لو النص أطول من كده
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           )
                         ],
@@ -84,31 +104,10 @@ class CategoriesScreen extends StatelessWidget {
               ),
             ),
           );
-        }if (state is CategoriesErrorState) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.wifi_off, size: 80, color: Colors.grey),
-                const SizedBox(height: 10),
-                Text(
-                  "Failed to load categories.",
-                  style: GoogleFonts.poppins(fontSize: 16),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    CubitHomeScreen.get(context).getCategories(forceRefresh: true);
-                  },
-                  child: Text("Retry"),
-                ),
-              ],
-            ),
-          );
         }
 
-        // Initial or unknown state
         return const Center(child: CircularProgressIndicator());
-      }
+      },
     );
   }
 }
